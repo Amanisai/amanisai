@@ -151,7 +151,6 @@ p {
 .skillsDiv {
   display: flex;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
@@ -285,7 +284,7 @@ p {
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .internHeader {
     flex-direction: column;
     text-align: center;
@@ -365,7 +364,7 @@ footer {
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   #aboutMeSection {
     flex-direction: column;
   }
@@ -376,13 +375,13 @@ footer {
   }
 
   .skillsDiv {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .skillsDiv .p1,
   .skillsDiv .p2 {
     width: 100%;
-    text-align: center;
+    align-items: center;
   }
 
   .projectCard {
@@ -542,4 +541,164 @@ body.dark-mode .socialLinks a:hover {
   0 0 16px rgba(77, 208, 225, 0.35);
 
   transform: translateY(-2px) scale(1.03);
+}
+/* ===============================
+   MOBILE-FIRST SAFE CSS
+=============================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Modern Antiqua", serif;
+  background: #F8F5E9;
+  color: #1E1E1E;
+  overflow-x: hidden;
+}
+
+/* ===============================
+   HERO SECTION – MOBILE SAFE
+=============================== */
+
+#HeroSection {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+}
+
+.heroSectionContent {
+  width: 100%;
+  max-width: 420px;     /* 🔒 LOCKED WIDTH */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Text lines */
+.heroSectionContent p {
+  margin: 6px 0;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+/* Name & role */
+.focus-text {
+  display: block;       /* 🔥 prevents side shift */
+  width: 100%;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+/* Resume button */
+.heroButtons {
+  margin-top: 14px;
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border-radius: 8px;
+  border: none;
+}
+
+/* ===============================
+   SECTIONS WRAPPER
+=============================== */
+
+#aboutMeSection,
+#educationSection,
+#skillsSection,
+#projectSection,
+#internshipSection,
+#contactSection {
+  width: 92%;
+  margin: 0 auto;
+}
+
+/* ===============================
+   SKILLS – MOBILE FIX (NO CUTTING)
+=============================== */
+
+.skillsDiv {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+
+  /* ❌ REMOVE FLEX */
+  display: block;
+}
+
+.skillsDiv .p1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.skillsDiv .p2 {
+  width: 100%;
+}
+
+/* Skills list */
+.skillsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.skillsList li {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+/* ===============================
+   PROJECT CARDS – MOBILE
+=============================== */
+
+.projectCard {
+  display: block;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.projectImage {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* ===============================
+   INTERNSHIPS – MOBILE
+=============================== */
+
+.internshipCard {
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+/* ===============================
+   CONTACT
+=============================== */
+
+.contactContainer {
+  padding: 20px;
+  border-radius: 16px;
+}
+
+/* ===============================
+   FOOTER
+=============================== */
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: black;
+  color: white;
 }
