@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Amanisai Pokala Portfolio</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Modern+Antiqua&display=swap" rel="stylesheet">
+
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    
+
+  <!-- LIVE BACKGROUND -->
+  <canvas id="particles"></canvas>
+
+
+<nav class="navbar navbar-expand-lg" data-aos="fade-down">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Amanisai Pokala</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="#HeroSection">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#aboutMeSection">About Me</a></li>
+                <li class="nav-item"><a class="nav-link" href="#educationSection">Education</a></li>
+                <li class="nav-item"><a class="nav-link" href="#skillsSection">Skills</a></li>
+                <li class="nav-item"><a class="nav-link" href="#projectSection">Projects</a></li>
+                <li class="nav-item"><a class="nav-link" href="#internshipSection">Internships</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contactSection">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section id="HeroSection" data-aos="fade-up">
+    <div class="heroSectionContent">
+        <img src="./Amani.jpg" class="myImageCircle">
+        <p>Hi, I'm<br><span class="focus-text">Amanisai Pokala</span></p>
+        <p>I'm a Fresher <span class="focus-text">Web Developer</span></p>
+        <a href="./resume/AMANISAI POKALA.pdf" download>
+            <button class="btn btn-sm heroButtons">Resume</button>
+        </a>
+    </div>
+</section>
+
+<section id="aboutMeSection" class="mt-5">
+    <div class="aboutP1" data-aos="fade-right">
+        <img src="./Amani.jpg" width="250px">
+    </div>
+    <div class="aboutP2" data-aos="fade-left">
+        <h1 class="heading">About Me👇🏻</h1>
+        <p>
+            I’m a passionate fresher developer with a strong interest in building clean, responsive, and user-friendly web applications. I enjoy turning ideas into real-world projects and continuously improving my skills. I’m eager to learn, adapt, and grow while contributing to meaningful software solutions.
+        </p>
+    </div>
+</section>
+
+<section id="educationSection" class="mt-5">
+    <h1 class="heading m-auto" data-aos="fade-up">Education</h1>
+    <div class="educationContainer">
+        <div class="educationCard" data-aos="fade-up">
+            <h3>Bachelor of Technology (B.Tech)</h3>
+            <p class="eduInstitute">Sri Vasavi Institute of Engineering and Technology</p>
+            <p class="eduDetails">Computer Science and Engineering<br>2022 – 2026</p>
+        </div>
+        <div class="educationCard" data-aos="fade-up" data-aos-delay="100">
+            <h3>Intermediate (12th)</h3>
+            <p class="eduInstitute">Narayana Junior College</p>
+            <p class="eduDetails">MPC<br>2020 – 2022</p>
+        </div>
+        <div class="educationCard" data-aos="fade-up" data-aos-delay="200">
+            <h3>Secondary School (10th)</h3>
+            <p class="eduInstitute">Sree Vaagdevi Techno School</p>
+            <p class="eduDetails">SSC<br>2019 – 2020</p>
+        </div>
+    </div>
+</section>
+
+<section id="skillsSection" class="mt-5">
+    <h1 class="heading m-auto" data-aos="fade-up">Skills</h1>
+
+    <div class="skillsDiv" data-aos="fade-up">
+        <div class="p1"><p>Basic</p></div>
+        <div class="p2">
+            <ul class="skillsList">
+                <li>MySQL,</li>
+                <li>GitHub,</li>
+                <li>Rest APIs.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="skillsDiv" data-aos="fade-up" data-aos-delay="100">
+        <div class="p1"><p>Intermediate</p></div>
+        <div class="p2">
+            <ul class="skillsList">
+                <li>HTML,</li>
+                <li>CSS,</li>
+                <li>Bootstrap,</li>
+                <li>JavaScript,</li>
+                <li>React.js,</li>
+                <li>Responsive Design.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="skillsDiv" data-aos="fade-up" data-aos-delay="200">
+        <div class="p1"><p>Advanced</p></div>
+        <div class="p2">
+            <ul class="skillsList">
+                <li>HTML & CSS (Advanced Layouts)</li>
+                <li>UI/UX Implementation</li>
+                <li>React.js (Hooks, Components,)</li>
+                <li>JJavaScript (Async, DOM, ES6)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="projectSection" class="mt-5">
+    <h1 class="heading m-auto" data-aos="fade-up">Projects</h1>
+
+    <div class="Project">
+
+        <div class="projectCard" data-aos="fade-up">
+            <div class="p1"><img src="./Ecommerce.jpg" class="projectImage"></div>
+            <div class="p2">
+                <h3>Ecommerce Website</h3>
+                <p>A full-featured e-commerce web application with category-based product browsing, dynamic cart functionality, and responsive UI.</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/Ecommerce-sample-project" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://ecommerce-sample-project.netlify.app/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="projectCard" data-aos="fade-up" data-aos-delay="100">
+            <div class="p1"><img src="./expenseTracker.webp" class="projectImage"></div>
+            <div class="p2">
+                <h3>Expense Tracker</h3>
+                <p>A responsive expense tracker web app that allows users to add, delete, and manage income and expenses with real-time balance calculations.</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/Expense-Tracker" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://amanisai.github.io/Expense-Tracker/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="projectCard" data-aos="fade-up" data-aos-delay="200">
+            <div class="p1"><img src="./weather.webp" class="projectImage"></div>
+            <div class="p2">
+                <h3>Live Weather App</h3>
+                <p>A live weather application that fetches real-time weather data using APIs and displays temperature, humidity, and conditions by city.</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/Live-Weather-Project" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://amanisai.github.io/Live-Weather-Project/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="projectCard" data-aos="fade-up" data-aos-delay="300">
+            <div class="p1"><img src="./Lamp signin.png" class="projectImage"></div>
+            <div class="p2">
+                <h3>Lamp Sign In Page</h3>
+                <p>A creative sign-in page with interactive lamp animation, focusing on modern UI design and CSS animations.</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/Lamp-signin-Page" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://lamp-login-page.netlify.app/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="projectCard" data-aos="fade-up" data-aos-delay="400">
+            <div class="p1"><img src="./Currency.png" class="projectImage"></div>
+            <div class="p2">
+                <h3>Currency Converter</h3>
+                <p>A currency converter web app that converts values between different currencies using real-time exchange rate APIs.</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/Currency-Converter" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://currency-converter-sample-project.netlify.app/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="projectCard" data-aos="fade-up" data-aos-delay="500">
+            <div class="p1"><img src="./HandCricket.png" class="projectImage"></div>
+            <div class="p2">
+                <h3>Hand Cricket Game</h3>
+                <p>A fun hand cricket game built using JavaScript where users play against the computer with dynamic score calculation.</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/Hand-Cricket" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://hand-cricket-simple-game.netlify.app/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="internshipSection" class="mt-5">
+  <h1 class="heading m-auto" data-aos="fade-up">Internships & Certifications</h1>
+
+  <div class="internshipContainer">
+
+    <!-- Apexnuera Internship -->
+    <div class="internshipCard" data-aos="fade-up">
+      <div class="internHeader">
+        <img src="./logos/Apexnuera logo.png" alt="Apexnuera Logo" class="internLogo">
+        <div>
+          <h3>Java Full Stack Engineer Intern</h3>
+          <p class="internOrg">Apexnuera Technologies Pvt. Ltd.</p>
+          <p class="internDuration">May 2025 – November 2025</p>
+        </div>
+      </div>
+
+      <p class="internDesc">
+        Developed Java Spring Boot APIs and built responsive frontend components
+        using HTML, CSS, JavaScript, and React. Improved performance and reduced bugs
+        through team collaboration.
+      </p>
+    </div>
+
+    <!-- Google Cloud Generative AI -->
+    <div class="internshipCard" data-aos="fade-up" data-aos-delay="100">
+      <div class="internHeader">
+        <img src="./logos/google cloud.png" alt="Google Cloud Logo" class="internLogo">
+        <div>
+          <h3>Google Cloud Generative AI Virtual Internship</h3>
+          <p class="internOrg">Google Cloud</p>
+          <p class="internDuration">2024</p>
+        </div>
+      </div>
+
+      <p class="internDesc">
+        Hands-on experience with Generative AI tools, prompt engineering,
+        and deploying AI solutions using Google Cloud Vertex AI.
+      </p>
+
+      <a href="./Internships/generative AI.pdf" target="_blank" class="certificateBtn">
+        View Certificate
+      </a>
+    </div>
+
+    <!-- AWS Data Engineering -->
+    <div class="internshipCard" data-aos="fade-up" data-aos-delay="200">
+      <div class="internHeader">
+        <img src="./logos/AWS.png" alt="AWS Logo" class="internLogo">
+        <div>
+          <h3>AWS Data Engineering Virtual Internship</h3>
+          <p class="internOrg">AWS Academy</p>
+          <p class="internDuration">2024</p>
+        </div>
+      </div>
+
+      <p class="internDesc">
+        Worked with AWS services such as S3, Glue, Lambda, and Redshift
+        to build and manage scalable data pipelines.
+      </p>
+
+      <a href="./Internships/Aws2.pdf" target="_blank" class="certificateBtn">
+        View Certificate
+      </a>
+    </div>
+
+    <!-- Google AI-ML -->
+    <div class="internshipCard" data-aos="fade-up" data-aos-delay="300">
+      <div class="internHeader">
+        <img src="./logos/AI-ML.png" alt="Google AI-ML Logo" class="internLogo">
+        <div>
+          <h3>Google AI-ML Virtual Internship</h3>
+          <p class="internOrg">Google for Developers</p>
+          <p class="internDuration">2024</p>
+        </div>
+      </div>
+
+      <p class="internDesc">
+        Learned machine learning fundamentals, model development,
+        and evaluation using Python with hands-on projects.
+      </p>
+
+      <a href="./Internships/Google AI-ML.pdf" target="_blank" class="certificateBtn">
+        View Certificate
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<section id="contactSection" data-aos="zoom-in">
+  <h1 class="heading m-auto">Contact Me</h1>
+
+  <div class="contactContainer">
+    <div class="contactInfo">
+      <h3>Let’s Connect</h3>
+      <p>
+        I’m open to job opportunities, internships, and collaborations.
+        Feel free to reach out through the details below.
+      </p>
+
+      <div class="contactItem">
+        <span>📧</span>
+        <a href="mailto:">amanisaipokala@gmail.com</a>
+      </div>
+
+      <div class="socialLinks">
+        <a href="https://github.com/Amanisai" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/amanisai-pokala-503b89351/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer data-aos="fade-up">
+    All rights Reserved!
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 900,
+    once: true
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+<script src="./animation.js"></script>
+
+</body>
+</html>
