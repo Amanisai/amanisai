@@ -63,12 +63,14 @@ p {
   border-radius: 50%;
   height: 200px;
   width: 200px;
-    box-shadow:
-    0 0 15px rgba(127, 183, 194, 0.8),
-    0 0 35px rgba(127, 183, 194, 1),
-    0 0 70px rgba(127, 183, 194, 1);
-  transform: scale(1.05);
+
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
+
 
 .heroSectionContent p {
   font-weight: 600;
@@ -109,8 +111,8 @@ p {
     box-shadow:
     0 0 15px rgba(127, 183, 194, 0.8),
     0 0 35px rgba(127, 183, 194, 1),
-    0 0 70px rgba(127, 183, 194, 1);
-  transform: scale(1.05);
+    
+  transition: box-shadow 0.4s ease;
 }
 
 /* Education */
@@ -130,7 +132,11 @@ p {
   background: #F8F5E9;
   border-radius: 18px;
   padding: 25px 30px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
 
 .educationCard h3 {
@@ -160,7 +166,11 @@ p {
 .skillsDiv {
   display: flex;
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
 
 .skillsDiv .p1 {
@@ -190,7 +200,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 50px;
-  width: 85;
+  width: 85%;
   margin: auto;
 }
 
@@ -198,18 +208,24 @@ p {
   background: #ffffff;
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   display: flex;
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
   align-items: center;
   gap: 40px;
   overflow: hidden;
+  flex-direction: row; 
 }
 
 .projectImage {
-  width: 80px;
-  height: 80px;
-  border-radius: 15px;
-  object-fit: contain;
+  width: 220px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .buttons {
@@ -251,7 +267,11 @@ p {
   background: #F8F5E9;
   border-radius: 20px;
   padding: 25px 30px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
 
 .internHeader {
@@ -314,7 +334,11 @@ p {
   background: #F8F5E9;
   border-radius: 25px;
   padding: 40px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
 
 .contactInfo {
