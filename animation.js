@@ -1,4 +1,6 @@
 console.log("animations.js loaded");
+document.body.classList.add("dark-mode");
+
 
 /* ==================================================
    SCROLL PROGRESS BAR
