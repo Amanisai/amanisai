@@ -178,3 +178,50 @@ function draw() {
 }
 
 draw();
+
+const cursor = document.createElement("div");
+cursor.className = "triangle-cursor";
+document.body.appendChild(cursor);
+
+document.addEventListener("mousemove", e => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+const canvas = document.getElementById("glow-bg");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+resize();
+addEventListener("resize", resize);
+
+const orbs = Array.from({ length: 10 }, () => ({
+  x: Math.random() * canvas.width,
+  y: canvas.height / 2 + (Math.random() - 0.5) * 120,
+  r: Math.random() * 120 + 80,
+  vx: (Math.random() - 0.5) * 0.15,
+}));
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  orbs.forEach(o => {
+    o.x += o.vx;
+    if (o.x < -200 || o.x > canvas.width + 200) o.vx *= -1;
+
+    const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+    g.addColorStop(0, "rgba(255,220,150,0.35)");
+    g.addColorStop(1, "rgba(255,220,150,0)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+animate();
