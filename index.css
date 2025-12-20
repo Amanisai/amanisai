@@ -15,11 +15,13 @@
 body {
   font-family: "Modern Antiqua", serif;
   margin: 0;
+  cursor: none;
   
 }
 body.dark-mode {
   background: var(--bg-light);
   color: var(--text-light);
+  cursor: none;
 }
 body.dark-mode #HeroSection {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -742,4 +744,15 @@ footer {
   padding: 20px;
   background: black;
   color: white;
+}
+.custom-cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  background: #7fb7c2;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 15px rgba(127, 183, 194, 0.9);
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }
