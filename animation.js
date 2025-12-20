@@ -1,4 +1,6 @@
 console.log("animations.js loaded");
+document.body.classList.add("dark-mode");
+
 
 /* ==================================================
    SCROLL PROGRESS BAR
@@ -176,3 +178,31 @@ function draw() {
 }
 
 draw();
+
+
+const cursor = document.createElement("div");
+cursor.className = "triangle-cursor";
+document.body.appendChild(cursor);
+
+document.addEventListener("mousemove", e => {
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+function drawLines() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 120) {
+        ctx.strokeStyle = "rgba(127,183,194,0.15)";
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+}

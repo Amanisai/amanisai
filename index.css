@@ -15,11 +15,13 @@
 body {
   font-family: "Modern Antiqua", serif;
   margin: 0;
+  cursor: none;
   
 }
 body.dark-mode {
   background: var(--bg-light);
   color: var(--text-light);
+  cursor: none;
 }
 body.dark-mode #HeroSection {
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -63,8 +65,14 @@ p {
   border-radius: 50%;
   height: 200px;
   width: 200px;
-  border: 5px rgb(127, 183, 194) solid;
+
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
+
 
 .heroSectionContent p {
   font-weight: 600;
@@ -102,6 +110,11 @@ p {
 
 .aboutP1 img {
   border-radius: 10px;
+    box-shadow:
+    0 0 15px rgba(127, 183, 194, 0.8),
+    0 0 35px rgba(127, 183, 194, 1);
+    
+  transition: box-shadow 0.4s ease;
 }
 
 /* Education */
@@ -115,18 +128,25 @@ p {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  margin-top:30px;
 }
 
 .educationCard {
   background: #F8F5E9;
   border-radius: 18px;
   padding: 25px 30px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
+  margin-top: 30px;
 }
 
 .educationCard h3 {
   margin-bottom: 6px;
   font-size: 20px;
+  margin-top: 30px
 }
 
 .eduInstitute {
@@ -151,7 +171,11 @@ p {
 .skillsDiv {
   display: flex;
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
 }
 
 .skillsDiv .p1 {
@@ -181,7 +205,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 50px;
-  width: 85;
+  width: 85%;
   margin: auto;
 }
 
@@ -189,16 +213,25 @@ p {
   background: #ffffff;
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   display: flex;
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
   align-items: center;
   gap: 40px;
   overflow: hidden;
+  flex-direction: row; 
+  margin-top: 30px;
 }
 
 .projectImage {
-  width: 300px;
-  border-radius: 15px;
+  width: 220px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .buttons {
@@ -240,7 +273,12 @@ p {
   background: #F8F5E9;
   border-radius: 20px;
   padding: 25px 30px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
+  margin-top: 30px;
 }
 
 .internHeader {
@@ -250,8 +288,8 @@ p {
 }
 
 .internLogo {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
 }
 
@@ -303,7 +341,12 @@ p {
   background: #F8F5E9;
   border-radius: 25px;
   padding: 40px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 0 8px rgba(127, 183, 194, 0.5),
+    0 0 18px rgba(127, 183, 194, 0.6);
+
+  transition: box-shadow 0.4s ease;
+  margin-top:30px;
 }
 
 .contactInfo {
@@ -701,4 +744,34 @@ footer {
   padding: 20px;
   background: black;
   color: white;
+}
+.triangle-cursor {
+  position: fixed;
+  width: 0;
+  height: 0;
+
+  /* TRIANGLE SHAPE */
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 14px solid #cfd8dc;
+
+  pointer-events: none;
+  z-index: 9999;
+
+  transform: translate(-50%, -50%) rotate(-45deg);
+  filter: drop-shadow(0 0 6px rgba(127, 183, 194, 0.7));
+}
+
+a:hover ~ .triangle-cursor,
+button:hover ~ .triangle-cursor {
+  transform: translate(-50%, -50%) rotate(-45deg) scale(1.2);
+}
+
+@media (max-width: 768px) {
+  * {
+    cursor: auto !important;
+  }
+  .triangle-cursor {
+    display: none;
+  }
 }
