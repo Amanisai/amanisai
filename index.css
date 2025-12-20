@@ -745,14 +745,18 @@ footer {
   background: black;
   color: white;
 }
-.custom-cursor {
+.triangle-cursor {
   position: fixed;
-  width: 12px;
-  height: 12px;
-  background: #7fb7c2;
-  border-radius: 50%;
+  width: 0;
+  height: 0;
+
+  /* TRIANGLE SHAPE */
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 14px solid #cfd8dc;  /* triangle color */
+
   pointer-events: none;
-  box-shadow: 0 0 15px rgba(127, 183, 194, 0.9);
-  transform: translate(-50%, -50%);
   z-index: 9999;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  filter: drop-shadow(0 0 8px rgba(127, 183, 194, 0.8));
 }
