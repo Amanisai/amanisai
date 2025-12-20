@@ -740,3 +740,35 @@ footer {
   background: black;
   color: white;
 }
+.triangle-cursor {
+  position: fixed;
+  width: 0;
+  height: 0;
+
+  /* TRIANGLE SHAPE */
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 14px solid #cfd8dc;
+
+  pointer-events: none;
+  z-index: 9999;
+
+  transform: translate(-50%, -50%) rotate(-45deg);
+  filter: drop-shadow(0 0 6px rgba(127, 183, 194, 0.7));
+  a:hover ~ .triangle-cursor,
+button:hover ~ .triangle-cursor {
+  transform: translate(-50%, -50%) rotate(-45deg) scale(1.2);
+}
+@media (max-width: 768px) {
+  * {
+    cursor: auto !important;
+  }
+  .triangle-cursor {
+    display: none;
+  }
+}
+#glow-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
