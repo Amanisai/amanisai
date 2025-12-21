@@ -11,20 +11,20 @@
   --accent: #64FFDA;
 }
 
+* {
+  cursor: none !important;
+}
+
 
 body {
   font-family: "Modern Antiqua", serif;
   margin: 0;
-  cursor: none;
+  overflow-x: hidden;
   
 }
 body.dark-mode {
   background: var(--bg-light);
   color: var(--text-light);
-  cursor: none;
-}
-body.dark-mode #HeroSection {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 }
 
 
@@ -40,21 +40,28 @@ p {
 
 /* Navbar */
 .navbar {
-  background: #F8F5E9;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
 }
+
 
 /* Hero Section */
 #HeroSection {
   width: 100%;
   height: 85vh;
-  background: #F8F5E9;
+  background: transparent; /* ✅ FIX */
   border-bottom-left-radius: 35px;
   border-bottom-right-radius: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 80px;
 }
-
 .heroSectionContent {
   display: flex;
   flex-direction: column;
@@ -156,7 +163,7 @@ p {
 
 /* Skills */
 #skillsSection {
-  width: 85%;
+  width: 900px;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -165,6 +172,9 @@ p {
 
 .skillsDiv {
   display: flex;
+  width: 100%;                 /* ✅ desktop full */
+  max-width: 900px;            /* ✅ center like cards */
+  margin: 0 auto;              /* ✅ center horizontally */
   border-radius: 12px;
   box-shadow:
     0 0 8px rgba(127, 183, 194, 0.5),
@@ -183,50 +193,66 @@ p {
 }
 
 .skillsDiv .p2 {
-  width: 75%;
+  width: 25%;
   font-size: 22px;
   padding: 20px;
 }
 
 .skillsList {
-  display: flex;
-  gap: 10px;
   list-style: none;
   padding: 0;
+  margin: 10px 0 0 0;
 }
 
-/* Projects */
-.Project {
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
+.skillsList li::before {
+  content: "•";
+  color: #64FFDA;
+  font-size: 22px;
+}
+
+/* =====================================================
+   PROJECTS
+===================================================== */
+#projectSection {
   width: 85%;
-  margin: auto;
+  margin: 120px auto;
+  gap: 40px;
+  max-width: 900px;
+}
+#projectSection .heading {
+  margin-bottom: 40px;   /* ✅ ADDS GAP */
 }
 
 .projectCard {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 30px;
   display: flex;
+  align-items: center;
+  gap: 30px;
+
+  background: var(--card-dark);
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+
   box-shadow:
     0 0 8px rgba(127, 183, 194, 0.5),
     0 0 18px rgba(127, 183, 194, 0.6);
-
-  transition: box-shadow 0.4s ease;
-  align-items: center;
-  gap: 40px;
-  overflow: hidden;
-  flex-direction: row; 
-  margin-top: 30px;
 }
 
 .projectImage {
-  width: 220px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 12px;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
   flex-shrink: 0;
+
+  background :rgba(0, 0, 0, 0.6);
+  padding: 8px;
+  border-radius: 10px;
+}
+@media (max-width: 768px) {
+  .projectCard {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 
 .buttons {
@@ -286,6 +312,7 @@ p {
   width: 80px;
   height: 80px;
   object-fit: contain;
+  border-radius: 50px;
 }
 
 .internOrg {
@@ -437,7 +464,6 @@ body.dark-mode {
 }
 
 /* Sections */
-body.dark-mode #HeroSection,
 body.dark-mode .navbar,
 body.dark-mode .educationCard,
 body.dark-mode .skillsDiv,
@@ -446,6 +472,11 @@ body.dark-mode .internshipCard,
 body.dark-mode .contactContainer {
   background: #1e1e1e;
   color: #eaeaea;
+}
+/* Explicit transparent hero */
+body.dark-mode #HeroSection {
+  background: transparent !important;
+  padding-top: 200px;
 }
 
 /* Headings */
@@ -528,10 +559,14 @@ body.dark-mode .navbar {
 body.dark-mode .navbar a {
   color: var(--text-dark);
 }
-#particles {
+#bg-canvas {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: -1;
+  pointer-events: none;
 }
 /* ===============================
    DARK MODE – CONTACT SECTION FIX
@@ -739,4 +774,33 @@ footer {
   padding: 20px;
   background: black;
   color: white;
+}
+.triangle-cursor {
+  position: fixed;
+  width: 0;
+  height: 0;
+
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 14px solid #ffffff;
+
+  pointer-events: none;
+  z-index: 999999;
+
+  transform: translate(-50%, -50%) rotate(-45deg);
+  filter: drop-shadow(0 0 6px rgba(127, 183, 194, 0.8));
+}
+
+@media (max-width: 768px) {
+  * {
+    cursor: auto !important;
+  }
+  .triangle-cursor {
+    display: none;
+  }
+}
+#typingText {
+  display: inline-block;
+  min-height: 32px;
+  white-space: nowrap;
 }

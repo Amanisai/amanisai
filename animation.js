@@ -1,10 +1,62 @@
 console.log("animations.js loaded");
+
+/* FORCE DARK MODE */
 document.body.classList.add("dark-mode");
 
 
-/* ==================================================
+/* ===============================
+   TYPEWRITER EFFECT
+=============================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const nameEl = document.getElementById("nameTyping");
+  const roleEl = document.getElementById("typingText");
+
+  const nameText = "Amanisai Pokala";
+  const roleText = "Web Developer";
+
+  let nameIndex = 0;
+  let roleIndex = 0;
+
+  function typeName() {
+    if (nameIndex < nameText.length) {
+      nameEl.textContent += nameText.charAt(nameIndex);
+      nameIndex++;
+      setTimeout(typeName, 100);
+    } else {
+      setTimeout(typeRole, 500); // pause before role
+    }
+  }
+
+  function typeRole() {
+    if (roleIndex < roleText.length) {
+      roleEl.textContent += roleText.charAt(roleIndex);
+      roleIndex++;
+      setTimeout(typeRole, 120);
+    }
+  }
+
+  typeName();
+});;
+
+
+/* ===============================
+   CANVAS SETUP (MISSING PART)
+=============================== */
+const canvas = document.getElementById("bg-canvas");
+const ctx = canvas.getContext("2d");
+
+let w, h;
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+/* ===============================
    SCROLL PROGRESS BAR
-================================================== */
+=============================== */
 const progressBar = document.createElement("div");
 progressBar.style.position = "fixed";
 progressBar.style.top = "0";
@@ -16,165 +68,118 @@ progressBar.style.zIndex = "9999";
 document.body.appendChild(progressBar);
 
 window.addEventListener("scroll", () => {
-  const scrollTop = document.documentElement.scrollTop;
-  const scrollHeight =
+  const st = document.documentElement.scrollTop;
+  const sh =
     document.documentElement.scrollHeight -
     document.documentElement.clientHeight;
-  progressBar.style.width = (scrollTop / scrollHeight) * 100 + "%";
+  progressBar.style.width = (st / sh) * 100 + "%";
 });
 
-/* ==================================================
-   SCROLL REVEAL (SECTIONS)
-================================================== */
-const sections = document.querySelectorAll(
-  "#aboutMeSection, #educationSection, #skillsSection, #projectSection, #internshipSection, #contactSection"
-);
-
-sections.forEach((sec) => {
-  sec.style.opacity = "0";
-  sec.style.transform = "translateY(40px)";
-  sec.style.transition = "all 0.9s ease";
-});
-
-const revealOnScroll = () => {
-  const windowHeight = window.innerHeight;
-  sections.forEach((sec) => {
-    if (sec.getBoundingClientRect().top < windowHeight - 120) {
-      sec.style.opacity = "1";
-      sec.style.transform = "translateY(0)";
-    }
-  });
-};
-
-window.addEventListener("scroll", revealOnScroll);
-revealOnScroll();
-
-/* ==================================================
-   TYPEWRITER EFFECT (HERO)
-================================================== */
-document.querySelectorAll(".focus-text").forEach((el) => {
-  const text = el.innerText;
-  el.innerText = "";
-  let i = 0;
-
-  const type = () => {
-    if (i < text.length) {
-      el.innerText += text.charAt(i);
-      i++;
-      setTimeout(type, 80);
-    }
-  };
-  setTimeout(type, 600);
-});
-
-/* ==================================================
-   BUTTON HOVER PULSE
-================================================== */
-document.querySelectorAll(
-  ".heroButtons, .gitHubButton, .demoButton, .certificateBtn"
-).forEach((btn) => {
-  btn.addEventListener("mouseenter", () => {
-    btn.style.transform = "scale(1.06)";
-    btn.style.transition = "0.2s ease";
-  });
-
-  btn.addEventListener("mouseleave", () => {
-    btn.style.transform = "scale(1)";
-  });
-});
-
-/* ==================================================
-   INTERNSHIP CARD REVEAL
-================================================== */
-const internCards = document.querySelectorAll(".internshipCard");
-
-internCards.forEach((card, i) => {
-  card.style.opacity = "0";
-  card.style.transform = "translateY(30px)";
-  card.style.transition = `all 0.6s ease ${i * 0.15}s`;
-});
-
-const revealInternships = () => {
-  const windowHeight = window.innerHeight;
-  internCards.forEach((card) => {
-    if (card.getBoundingClientRect().top < windowHeight - 100) {
-      card.style.opacity = "1";
-      card.style.transform = "translateY(0)";
-    }
-  });
-};
-
-window.addEventListener("scroll", revealInternships);
-revealInternships();
-
-/* ==================================================
-   DARK MODE TOGGLE (SAFE)
-================================================== */
 /* ===============================
-   DARK MODE TOGGLE (PROPER)
-================================ */
+   TRIANGLE CURSOR
+=============================== */
+const cursor = document.createElement("div");
+cursor.className = "triangle-cursor";
+document.body.appendChild(cursor);
 
-const toggle = document.createElement("button");
-toggle.innerText = "🌙";
-toggle.style.position = "fixed";
-toggle.style.bottom = "25px";
-toggle.style.right = "25px";
-toggle.style.border = "none";
-toggle.style.borderRadius = "50%";
-toggle.style.width = "50px";
-toggle.style.height = "50px";
-toggle.style.background = "#000";
-toggle.style.color = "#fff";
-toggle.style.cursor = "pointer";
-toggle.style.zIndex = "9999";
-toggle.style.fontSize = "18px";
+let mouseX = w / 2;
+let mouseY = h / 2;
 
-document.body.appendChild(toggle);
-
-toggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  toggle.innerText = document.body.classList.contains("dark-mode")
-    ? "☀️"
-    : "🌙";
+document.addEventListener("mousemove", e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + "px";
+  cursor.style.top = mouseY + "px";
 });
 
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
+/* ===============================
+   PARTICLE CONFIG
+=============================== */
+const PARTICLES = 90;
+const CONNECT_DIST = 130;
+const MAGNET_RADIUS = 180;
+const MAGNET_FORCE = 0.08;
+const RETURN_FORCE = 0.03;
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+const mouse = { x: null, y: null };
 
-const dots = Array.from({ length: 90 }, () => ({
-  x: Math.random() * canvas.width,
-  y: Math.random() * canvas.height,
-  r: Math.random() * 2 + 1,
-  dx: (Math.random() - 0.5) * 0.6,
-  dy: (Math.random() - 0.5) * 0.6
-}));
+document.addEventListener("mousemove", e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+document.addEventListener("mouseleave", () => {
+  mouse.x = mouse.y = null;
+});
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+/* ===============================
+   CREATE PARTICLES (FIXED)
+=============================== */
+const particles = Array.from({ length: PARTICLES }, () => {
+  const ox = Math.random() * w;
+  const oy = Math.random() * h;
+  return {
+    x: ox,
+    y: oy,
+    ox,
+    oy,
+    r: Math.random() * 1.6 + 0.8
+  };
+});
 
-  dots.forEach(d => {
+/* ===============================
+   ANIMATION LOOP
+=============================== */
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+
+  // update positions
+  for (const p of particles) {
+    p.x += (p.ox - p.x) * RETURN_FORCE;
+    p.y += (p.oy - p.y) * RETURN_FORCE;
+
+    if (mouse.x !== null) {
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < MAGNET_RADIUS) {
+        const force = (1 - dist / MAGNET_RADIUS) * MAGNET_FORCE;
+        p.x -= dx * force;
+        p.y -= dy * force;
+      }
+    }
+  }
+
+  // draw lines
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+
+      if (d < CONNECT_DIST) {
+        ctx.strokeStyle = `rgba(77,208,225,${1 - d / CONNECT_DIST})`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // draw particles
+  for (const p of particles) {
     ctx.beginPath();
-    ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-    ctx.fillStyle = document.body.classList.contains("dark-mode")
-      ? "rgba(22, 196, 155, 0.6)"
-      : "rgba(163, 249, 238, 0.87)";
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(77,208,225,0.9)";
+    ctx.shadowColor = "rgba(77,208,225,0.8)";
+    ctx.shadowBlur = 10;
     ctx.fill();
+    ctx.shadowBlur = 0;
+  }
 
-    d.x += d.dx;
-    d.y += d.dy;
-
-    if (d.x < 0 || d.x > canvas.width) d.dx *= -1;
-    if (d.y < 0 || d.y > canvas.height) d.dy *= -1;
-  });
-
-  requestAnimationFrame(draw);
+  requestAnimationFrame(animate);
 }
 
-draw();
+animate();
