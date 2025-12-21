@@ -19,12 +19,21 @@
 body {
   font-family: "Modern Antiqua", serif;
   margin: 0;
+<<<<<<< HEAD
   overflow-x: hidden;
+=======
+>>>>>>> 5b4fbab29c82e8c545511aab6ec1c31110bdeb2a
   
 }
 body.dark-mode {
   background: var(--bg-light);
   color: var(--text-light);
+<<<<<<< HEAD
+=======
+}
+body.dark-mode #HeroSection {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+>>>>>>> 5b4fbab29c82e8c545511aab6ec1c31110bdeb2a
 }
 
 
