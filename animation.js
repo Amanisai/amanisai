@@ -179,14 +179,17 @@ function draw() {
 
 draw();
 
+console.log("cursor running");
+
 const cursor = document.createElement("div");
 cursor.className = "triangle-cursor";
 document.body.appendChild(cursor);
 
-document.addEventListener("mousemove", e => {
+document.addEventListener("mousemove", (e) => {
   cursor.style.left = e.clientX + "px";
   cursor.style.top = e.clientY + "px";
 });
+
 
 const canvas = document.getElementById("glow-bg");
 const ctx = canvas.getContext("2d");
