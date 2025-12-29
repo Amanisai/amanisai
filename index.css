@@ -52,27 +52,32 @@ p {
 
 /* Hero Section */
 #HeroSection {
-  width: 100%;
-  height: 85vh;
-  background: transparent; /* ✅ FIX */
-  border-bottom-left-radius: 35px;
-  border-bottom-right-radius: 35px;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding-top: 80px;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
+
 .heroSectionContent {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.myImageCircle {
-  border-radius: 50%;
-  height: 200px;
-  width: 200px;
 
+/* Hero Image */
+.heroImage {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 15px;
   box-shadow:
     0 0 8px rgba(127, 183, 194, 0.5),
     0 0 18px rgba(127, 183, 194, 0.6);
@@ -80,45 +85,137 @@ p {
   transition: box-shadow 0.4s ease;
 }
 
-
-.heroSectionContent p {
-  font-weight: 600;
-  font-size: 24px;
+.heroImage::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(100, 255, 218, 0.45),
+    rgba(100, 255, 218, 0.18),
+    transparent 70%
+  );
+  filter: blur(20px);
+  z-index: -1;
 }
 
-.focus-text {
-  font-weight: 800;
-  font-size: 40px;
-}
-
-.heroButtons {
-  background: black;
-  color: white;
-  padding: 5px 18px;
-  border-radius: 8px;
-}
-
-/* About Me */
-#aboutMeSection {
-  display: flex;
-  justify-content: space-between;
+.heroImage img {
   width: 85%;
+  height: 85%;
+  object-fit: cover;
+  border-radius: 50%;
+  background: #000;
+}
+
+/* Text */
+.heroTextBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px; /* CONTROLS spacing */
+  margin-top: 10px;
+}
+.heroButtons {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.heroIntro,
+.heroRole {
+  min-height: 48px;
+}
+
+/* Resume Button */
+.heroButtons {
+  margin-top: 12px;
+  padding: 10px 22px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  transition: all 0.3s ease;
+}
+
+.heroButtons i {
+  font-size: 14px;
+}
+
+.heroButtons:hover {
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.6);
+}
+
+
+/* About Section */
+#aboutSection {
+  padding: 100px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.aboutContainer {
+  max-width: 1100px;
   margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 70px;
 }
 
-.aboutP1,
-.aboutP2 {
-  width: 47%;
+/* Image */
+.aboutImage img {
+  width: 300px;
+  height: 380px;
+  object-fit: cover;
+  border-radius: 22px;
+  box-shadow: 0 0 35px rgba(100, 255, 218, 0.35);
 }
 
-.aboutP1 {
-  text-align: center;
+/* Text */
+.aboutText {
+  max-width: 520px;
 }
 
-.aboutP1 img {
-  border-radius: 10px;
+.aboutText h2 {
+  font-size: 42px;
+  margin-bottom: 18px;
+  position: relative;
 }
 
+.aboutText h2::after {
+  content: "";
+  width: 70px;
+  height: 4px;
+  background: #64ffda;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+}
+
+.aboutText p {
+  font-size: 18px;
+  line-height: 1.7;
+  opacity: 0.9;
+}
+
+/* Mobile Fix */
+@media (max-width: 900px) {
+  .aboutContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .aboutText h2::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
 /* Education */
 #educationSection {
   padding: 60px 20px;
@@ -137,7 +234,7 @@ p {
   background: #F8F5E9;
   border-radius: 18px;
   padding: 25px 30px;
-  box-shadow:
+box-shadow:
     0 0 8px rgba(127, 183, 194, 0.5),
     0 0 18px rgba(127, 183, 194, 0.6);
 
@@ -162,20 +259,13 @@ p {
 }
 
 /* Skills */
-#skillsSection {
-  width: 900px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.skillsDiv {
-  display: flex;
-  width: 100%;                 /* ✅ desktop full */
-  max-width: 900px;            /* ✅ center like cards */
-  margin: 0 auto;              /* ✅ center horizontally */
-  border-radius: 12px;
+/* OUTER BOX */
+.skillsOuterBox {
+ max-width: 1250px;
+  margin: 40px auto;
+  padding: 40px;
+  border-radius: 30px;
+  background: var(--card-dark);;
   box-shadow:
     0 0 8px rgba(127, 183, 194, 0.5),
     0 0 18px rgba(127, 183, 194, 0.6);
@@ -183,32 +273,68 @@ p {
   transition: box-shadow 0.4s ease;
 }
 
-.skillsDiv .p1 {
-  width: 25%;
-  background: #F8F5E9;
-  text-align: center;
-  font-size: 25px;
-  font-weight: 700;
-  padding: 20px;
+/* GRID */
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
 }
 
-.skillsDiv .p2 {
-  width: 25%;
+/* SKILL CARD */
+.skillCard {
+  background: #243632;
+  color: #e9fff9;
+  padding: 18px 22px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 17px;
+  transition: all 0.3s ease;
+}
+
+.skillCard i {
   font-size: 22px;
-  padding: 20px;
+  color: #64ffda;
 }
 
-.skillsList {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0 0 0;
+/* HOVER */
+.skillCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(100, 255, 218, 0.25);
 }
 
-.skillsList li::before {
-  content: "•";
-  color: #64FFDA;
-  font-size: 22px;
+/* WIDE CARD */
+.skillCard.wide {
+  grid-column: span 2;
 }
+
+/* ===== MOBILE FIX ===== */
+@media (max-width: 768px) {
+  .skillsOuterBox {
+    padding: 25px;
+    border-radius: 22px;
+  }
+
+  .skillsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .skillCard {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .skillCard.wide {
+    grid-column: span 1;
+  }
+}
+@media (max-width: 768px) {
+  .skillCard {
+    border-radius: 14px;
+  }
+}
+
 
 /* =====================================================
    PROJECTS

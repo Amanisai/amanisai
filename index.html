@@ -13,7 +13,9 @@
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
     <link rel="stylesheet" href="./index.css">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+  </head>
 
 <body>
     
@@ -45,32 +47,52 @@
 
 <section id="HeroSection" data-aos="fade-up">
   <div class="heroSectionContent">
-    <img src="./Amani.jpg" class="myImageCircle">
-<p>
-  Hi, I'm<br>
-  <span id="nameTyping" class="focus-text"></span>
-</p>
 
-<p>
-  I'm a Fresher <span id="typingText" class="focus-text"></span>
-</p>
+    <!-- Hero Image -->
+    <div class="heroImage">
+      <img src="./Images/Amanisai.jpg" alt="Amonisai Pokala" />
+    </div>
 
+    <!-- Text -->
+    <p class="heroIntro">
+      Hi, I'm<br>
+      <span id="nameTyping" class="focus-text"></span>
+    </p>
+
+    <p class="heroRole">
+      I'm a FullStack <span id="typingText" class="focus-text"></span>
+    </p>
+
+    <!-- Resume Button -->
     <a href="./resume/AMANISAI POKALA.pdf" download>
-      <button class="btn btn-sm heroButtons">Resume</button>
+      <button class="btn btn-sm heroButtons">
+        <i class="fa-solid fa-download"></i> Resume
+      </button>
     </a>
+
   </div>
 </section>
 
-<section id="aboutMeSection" class="mt-5">
-    <div class="aboutP1" data-aos="fade-right">
-        <img src="./Amani.jpg" width="250px">
+
+<section id="aboutSection">
+  <div class="aboutContainer" data-aos="fade-up">
+
+    <div class="aboutImage">
+      <img src="./Images/Amanisai.jpg" alt="Amonisai Pokala">
     </div>
-    <div class="aboutP2" data-aos="fade-left">
-        <h1 class="heading">About Me👇🏻</h1>
-        <p>
-            I’m a passionate fresher developer with a strong interest in building clean, responsive, and user-friendly web applications. I enjoy turning ideas into real-world projects and continuously improving my skills. I’m eager to learn, adapt, and grow while contributing to meaningful software solutions.
-        </p>
+
+    <div class="aboutText">
+      <h2>About Me</h2>
+      <p>
+        I’m a passionate fresher developer with a strong interest in building
+        clean, responsive, and user-friendly web applications. I enjoy turning
+        ideas into real-world projects and continuously improving my skills.
+        I’m eager to learn, adapt, and grow while contributing to meaningful
+        software solutions.
+      </p>
     </div>
+
+  </div>
 </section>
 
 <section id="educationSection" class="mt-5">
@@ -95,48 +117,50 @@
 </section>
 
 <section id="skillsSection" class="mt-5">
-    <h1 class="heading m-auto" data-aos="fade-up">Skills</h1>
+  <h1 class="heading m-auto" data-aos="fade-up">Skills</h1>
 
-    <div class="skillsDiv" data-aos="fade-up">
-        <div class="p1"><p>Basic</p></div>
-        <div class="p2">
-            <ul class="skillsList">
-                <li>MySQL,</li>
-                <li>GitHub,</li>
-                <li>Rest APIs.</li>
-            </ul>
-        </div>
+  <!-- OUTER BOX -->
+  <div class="skillsOuterBox" data-aos="fade-up">
+
+    <div class="skillsGrid">
+      <div class="skillCard"><i class="fa-brands fa-html5"></i> HTML</div>
+      <div class="skillCard"><i class="fa-brands fa-css3-alt"></i> CSS</div>
+      <div class="skillCard"><i class="fa-brands fa-js"></i> JavaScript</div>
+      <div class="skillCard"><i class="fa-brands fa-react"></i> React.js</div>
+
+      <div class="skillCard"><i class="fa-solid fa-layer-group"></i> Next.js</div>
+      <div class="skillCard"><i class="fa-solid fa-paintbrush"></i> Tailwind CSS</div>
+      <div class="skillCard"><i class="fa-brands fa-bootstrap"></i> Bootstrap</div>
+      <div class="skillCard"><i class="fa-solid fa-mobile-screen"></i> UI / UX Implementation</div>
+
+      <div class="skillCard"><i class="fa-solid fa-plug"></i> REST APIs</div>
+      <div class="skillCard"><i class="fa-solid fa-database"></i> MySQL</div>
+      <div class="skillCard"><i class="devicon-postgresql-plain"></i> PostgreSQL</div>
+      <div class="skillCard"><i class="fa-brands fa-github"></i> GitHub</div>
+
+      <div class="skillCard"><i class="fa-brands fa-git-alt"></i> Git</div>
+      <div class="skillCard wide"><i class="fa-solid fa-diagram-project"></i> Full-Stack Development</div>
     </div>
 
-    <div class="skillsDiv" data-aos="fade-up" data-aos-delay="100">
-        <div class="p1"><p>Intermediate</p></div>
-        <div class="p2">
-            <ul class="skillsList">
-                <li>HTML,</li>
-                <li>CSS,</li>
-                <li>Bootstrap,</li>
-                <li>JavaScript.</li>
-
-            </ul>
-        </div>
-    </div>
-
-    <div class="skillsDiv" data-aos="fade-up" data-aos-delay="200">
-        <div class="p1"><p>Advanced</p></div>
-        <div class="p2">
-            <ul class="skillsList">
-                <li>HTML & CSS (Advanced Layouts)</li>
-                <li>UI/UX Implementation</li>
-                <li>React.js</li>
-            </ul>
-        </div>
-    </div>
+  </div>
 </section>
 
 <section id="projectSection" class="mt-5">
     <h1 class="heading" data-aos="fade-up">Projects</h1>
 
     <div class="Project">
+
+       <div class="projectCard" data-aos="fade-up">
+            <div class="p1"><img src="./MedMeet.png" alt=" " class="projectImage"></div>
+            <div class="p2">
+                <h3>MedMeet</h3>
+                <p>MedMeet is a full-stack doctor appointment platform showcasing responsive UI design, API integration, and database-driven functionality</p>
+                <div class="buttons">
+                    <a href="https://github.com/Amanisai/MEDMEET" target="_blank" class="btn gitHubButton">GitHub</a>
+                    <a href="https://medmeet-niua.vercel.app/" target="_blank" class="btn demoButton">Live Demo</a>
+                </div>
+            </div>
+        </div>
 
         <div class="projectCard" data-aos="fade-up">
             <div class="p1"><img src="./Ecommerce.jpg" alt=" " class="projectImage"></div>
