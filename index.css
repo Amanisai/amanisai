@@ -1,327 +1,818 @@
+/* ===============================
+   RESET + THEME (clean start)
+=============================== */
 :root {
-  --bg-light: #F8F5E9;
-  --text-light: #1E1E1E;
+  --bg: #070b14;
 
-  --bg-dark: #121212;
-  --text-dark: #EAEAEA;
+  /* more visible glass */
+  --panel: rgba(255, 255, 255, 0.10);
+  --panel-strong: rgba(255, 255, 255, 0.14);
+  --stroke: rgba(255, 255, 255, 0.16);
 
-  --card-light: #ffffff;
-  --card-dark: #1E1E1E;
+  --text: #eaf0ff;
+  --muted: rgba(234, 240, 255, 0.72);
 
-  --accent: #64FFDA;
+  --accent: #64ffda; /* keep your accent */
+  --accent-2: #4dd0e1;
+
+  /* stronger shadows */
+  --shadow: 0 22px 70px rgba(0, 0, 0, 0.60);
+  --shadow-soft: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --radius: 18px;
 }
 
-* {
-  cursor: none !important;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
 
 body {
-  font-family: "Modern Antiqua", serif;
   margin: 0;
   overflow-x: hidden;
-  
+  font-family: "Comfortaa", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
+
+/* Your JS forces this class; make it consistent */
 body.dark-mode {
-  background: var(--bg-light);
-  color: var(--text-light);
+  background: var(--bg);
+  color: var(--text);
 }
 
+/* Remove underlines everywhere */
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none !important;
+}
 
+/* ===============================
+   LAYERS (single source of truth)
+   canvas (-2) < scanlines (-1) < floating icons (0) < content (1) < cursor (max)
+=============================== */
+
+/* Background container (p5 mounts a canvas inside) */
+#bg-canvas{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Put the p5 canvas behind everything */
+#bg-canvas canvas{
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  pointer-events: none;
+
+  /* tuned for live particles */
+  opacity: 1 !important;
+  mix-blend-mode: screen;
+  filter: saturate(150%) contrast(130%);
+}
+
+/* Subtle scanline/film overlay (define ONCE) */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
+      rgba(0,0,0,0) 3px,
+      rgba(0,0,0,0) 6px
+    );
+  mix-blend-mode: overlay;
+  opacity: 0.05; /* was 0.08 */
+}
+
+/* REMOVE/REPLACE the old animated aurora background (body::after) with this: */
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1; /* behind content, above canvas if you use it */
+
+  /* Isometric grid (3 layers) */
+  background-image:
+    repeating-linear-gradient(
+      30deg,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 1px,
+      transparent 1px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      150deg,
+      rgba(255,255,255,0.05) 0px,
+      rgba(255,255,255,0.05) 1px,
+      transparent 1px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(100,255,218,0.035) 0px,
+      rgba(100,255,218,0.035) 1px,
+      transparent 1px,
+      transparent 56px
+    );
+
+  background-size: 240px 240px, 240px 240px, 240px 240px;
+  background-position: 0 0, 0 0, 0 0;
+
+  /* Keep opacity low so text stays readable */
+  opacity: 0.14; /* was 0.22 */
+
+  /* Slow structured motion */
+  animation: isoPan 40s linear infinite;
+  transform: translateZ(0);
+}
+
+/* New keyframes (replaces auroraDrift usage) */
+@keyframes isoPan{
+  0%   { background-position:   0px   0px,   0px   0px,   0px   0px; }
+  100% { background-position: 360px 240px, -300px 220px, 180px 320px; }
+}
+
+/* ===============================
+   CINEMATIC PARTICLE CURSOR (canvas overlay)
+=============================== */
+#cursor-canvas{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2147483646;
+  pointer-events: none;
+}
+
+/* On coarse pointers (mobile/tablet), keep it off */
+@media (hover: none), (pointer: coarse) {
+  #cursor-canvas{ display: none; }
+}
+
+/* Hide the default cursor only on desktop/fine pointers */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  * {
+    cursor: none !important;
+  }
+}
+
+/* When hovering the navbar, restore the normal cursor */
+body.nav-hover,
+body.nav-hover *{
+  cursor: auto !important;
+}
+
+body.nav-hover a,
+body.nav-hover button,
+body.nav-hover [role="button"]{
+  cursor: pointer !important;
+}
+
+/* ===============================
+   GLOBAL HELPERS
+=============================== */
 p {
   margin: 0;
+  color: var(--muted);
 }
 
 .heading {
   width: fit-content;
-  margin: auto;
-  text-decoration: underline;
+  margin: 0 auto 28px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 12px rgba(77, 208, 225, 0.16));
 }
 
-/* Navbar */
+/* Sections width */
+#HeroSection,
+#aboutSection,
+#educationSection,
+#skillsSection,
+#projectSection,
+#internshipSection,
+#contactSection {
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
+/* ===============================
+   NAVBAR
+=============================== */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+
+  background: rgba(6, 10, 20, 0.55);
+  border-bottom: 1px solid var(--stroke);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* hide/reveal on scroll */
+  transform: translateY(0);
+  transition: transform 260ms ease;
+  will-change: transform;
+}
+
+/* Navbar slides up when scrolling down */
+.navbar.nav-hidden {
+  transform: translateY(-110%);
+}
+
+/* Let the standard cursor show on the navbar */
+.navbar,
+.navbar * {
+  cursor: auto;
+}
+
+.navbar a,
+.navbar button {
+  cursor: pointer;
 }
 
 
-/* Hero Section */
+/* Bootstrap toggler visibility */
+.navbar {
+  --bs-navbar-color: rgba(234, 240, 255, 0.82);
+  --bs-navbar-hover-color: var(--accent-2);
+  --bs-navbar-active-color: var(--accent);
+  --bs-navbar-brand-color: var(--text);
+  --bs-navbar-brand-hover-color: var(--accent);
+  --bs-navbar-toggler-border-color: rgba(234, 240, 255, 0.25);
+}
+.navbar .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* ===============================
+   HERO
+=============================== */
 #HeroSection {
   min-height: 100vh;
+  padding-top: 92px; /* fixed navbar offset */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.heroSectionContent {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   position: relative;
   z-index: 2;
 }
 
-.heroSectionContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-
-/* Hero Image */
 .heroImage {
   width: 260px;
   height: 260px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   position: relative;
-  margin-bottom: 15px;
-  box-shadow:
-    0 0 8px rgba(127, 183, 194, 0.5),
-    0 0 18px rgba(127, 183, 194, 0.6);
+  margin-bottom: 10px;
 
-  transition: box-shadow 0.4s ease;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 0 16px rgba(100, 255, 218, 0.18), 0 0 42px rgba(77, 208, 225, 0.14);
 }
 
 .heroImage::before {
   content: "";
   position: absolute;
-  inset: -12px;
+  inset: -14px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(100, 255, 218, 0.45),
-    rgba(100, 255, 218, 0.18),
-    transparent 70%
-  );
-  filter: blur(20px);
+  background: radial-gradient(circle, rgba(100, 255, 218, 0.22), transparent 70%);
+  filter: blur(18px);
   z-index: -1;
 }
 
 .heroImage img {
   width: 85%;
   height: 85%;
-  object-fit: cover;
   border-radius: 50%;
-  background: #000;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Text */
-.heroTextBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px; /* CONTROLS spacing */
-  margin-top: 10px;
+.focus-text {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  color: var(--text);
 }
-.heroButtons {
-  margin-top: 8px;
+
+#typingText {
+  display: inline-block;
+  min-height: 32px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.heroButtons,
+.gitHubButton,
+.demoButton,
+.certificateBtn,
+.socialLinks a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-}
-.heroIntro,
-.heroRole {
-  min-height: 48px;
-}
+  justify-content: center;
+  gap: 10px;
 
-/* Resume Button */
-.heroButtons {
-  margin-top: 12px;
-  padding: 10px 22px;
+  padding: 10px 18px;
   border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(100, 255, 218, 0.35);
+
+  background: rgba(0, 0, 0, 0.20);
+  color: var(--text);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
-.heroButtons i {
-  font-size: 14px;
+.heroButtons:hover,
+.gitHubButton:hover,
+.demoButton:hover,
+.certificateBtn:hover,
+.socialLinks a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(77, 208, 225, 0.55);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.40);
 }
 
-.heroButtons:hover {
-  background: var(--accent);
-  color: #000;
-  box-shadow: 0 0 20px rgba(100, 255, 218, 0.6);
+.heroButtons {
+  background: linear-gradient(90deg, rgba(100, 255, 218, 0.18), rgba(77, 208, 225, 0.12));
 }
 
-
-/* About Section */
+/* ===============================
+   ABOUT
+=============================== */
 #aboutSection {
-  padding: 100px 20px;
+  padding: 90px 0 40px;
   position: relative;
   z-index: 2;
 }
 
 .aboutContainer {
-  max-width: 1100px;
-  margin: auto;
   display: flex;
   align-items: center;
-  gap: 70px;
+  gap: 60px;
+  padding: 26px;
+
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-/* Image */
 .aboutImage img {
   width: 300px;
   height: 380px;
   object-fit: cover;
-  border-radius: 22px;
-  box-shadow: 0 0 35px rgba(100, 255, 218, 0.35);
-}
-
-/* Text */
-.aboutText {
-  max-width: 520px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 22px rgba(100, 255, 218, 0.14);
 }
 
 .aboutText h2 {
-  font-size: 42px;
-  margin-bottom: 18px;
-  position: relative;
-}
-
-.aboutText h2::after {
-  content: "";
-  width: 70px;
-  height: 4px;
-  background: #64ffda;
-  position: absolute;
-  left: 0;
-  bottom: -10px;
+  margin: 0 0 12px;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 700;
+  color: var(--text);
 }
 
 .aboutText p {
-  font-size: 18px;
-  line-height: 1.7;
-  opacity: 0.9;
+  font-size: 16px;
+  line-height: 1.8;
 }
 
-/* Mobile Fix */
-@media (max-width: 900px) {
-  .aboutContainer {
-    flex-direction: column;
-    text-align: center;
-    gap: 40px;
-  }
-
-  .aboutText h2::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-/* Education */
-#educationSection {
-  padding: 60px 20px;
+/* ===============================
+   EDUCATION / INTERNSHIPS / CONTACT (cards)
+=============================== */
+#educationSection,
+#internshipSection,
+#contactSection {
+  padding: 60px 0;
 }
 
-.educationContainer {
-  max-width: 900px;
-  margin: auto;
+.educationContainer,
+.internshipContainer {
+  margin-top: 22px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  margin-top:30px;
-}
-
-.educationCard {
-  background: #F8F5E9;
-  border-radius: 18px;
-  padding: 25px 30px;
-box-shadow:
-    0 0 8px rgba(127, 183, 194, 0.5),
-    0 0 18px rgba(127, 183, 194, 0.6);
-
-  transition: box-shadow 0.4s ease;
-  margin-top: 30px;
-}
-
-.educationCard h3 {
-  margin-bottom: 6px;
-  font-size: 20px;
-  margin-top: 30px
-}
-
-.eduInstitute {
-  font-weight: 600;
-  color: #444;
-}
-
-.eduDetails {
-  color: #666;
-  font-size: 15px;
-}
-
-/* Skills */
-/* OUTER BOX */
-.skillsOuterBox {
- max-width: 1250px;
-  margin: 40px auto;
-  padding: 40px;
-  border-radius: 30px;
-  background: var(--card-dark);;
-  box-shadow:
-    0 0 8px rgba(127, 183, 194, 0.5),
-    0 0 18px rgba(127, 183, 194, 0.6);
-
-  transition: box-shadow 0.4s ease;
-}
-
-/* GRID */
-.skillsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 18px;
 }
 
-/* SKILL CARD */
-.skillCard {
-  background: #243632;
-  color: #e9fff9;
-  padding: 18px 22px;
-  border-radius: 18px;
+.educationCard,
+.internshipCard,
+.contactContainer,
+.skillsOuterBox,
+.projectCard {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.educationCard,
+.internshipCard {
+  padding: 22px 24px;
+}
+
+.eduInstitute,
+.internOrg {
+  color: var(--text);
+}
+
+.eduDetails,
+.internDuration,
+.internDesc {
+  color: var(--muted);
+}
+
+.internHeader {
   display: flex;
   align-items: center;
-  gap: 14px;
-  font-size: 17px;
-  transition: all 0.3s ease;
+  gap: 18px;
+}
+
+.internLogo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* ===============================
+   SKILLS
+=============================== */
+#skillsSection {
+  padding: 60px 0;
+}
+
+.skillsOuterBox {
+  margin-top: 18px;
+  padding: 28px;
+  background: var(--panel-strong);
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.skillCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
 .skillCard i {
   font-size: 22px;
-  color: #64ffda;
+  color: var(--accent);
 }
 
-/* HOVER */
 .skillCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(100, 255, 218, 0.25);
+  transform: translateY(-4px);
+  border-color: rgba(100, 255, 218, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
-/* WIDE CARD */
 .skillCard.wide {
   grid-column: span 2;
 }
 
-/* ===== MOBILE FIX ===== */
+/* ===============================
+   PROJECTS
+=============================== */
+#projectSection {
+  padding: 60px 0;
+}
+
+.projectCard {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.projectImage {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.buttons {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.gitHubButton {
+  border-color: rgba(100, 255, 218, 0.35);
+}
+
+.demoButton {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ===============================
+   CONTACT
+=============================== */
+.contactContainer {
+  margin-top: 18px;
+  padding: 28px;
+}
+
+.contactInfo {
+  text-align: center;
+}
+
+.contactItem {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.contactItem a {
+  color: var(--text);
+}
+
+.socialLinks {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ===============================
+   FOOTER
+=============================== */
+footer {
+  width: 100%;
+  margin-top: 60px;
+  padding: 22px 14px;
+  text-align: center;
+
+  background: rgba(0, 0, 0, 0.40);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(234, 240, 255, 0.85);
+}
+
+/* ===============================
+   WOW FACTOR ANIMATIONS
+   - Animated neon glass border on all cards
+   - Soft floating + glow pulse
+   - Subtle scanline overlay (very low opacity)
+   - Respects prefers-reduced-motion
+=============================== */
+
+/* Ensure content stays above overlay */
+nav, section, footer { position: relative; z-index: 1; }
+
+/* Keyframes */
+@keyframes auroraBorderSpin{
+  0%{ transform: rotate(0deg); }
+  100%{ transform: rotate(360deg); }
+}
+@keyframes floatSoft{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
+}
+@keyframes glowPulse{
+  0%,100%{ box-shadow: var(--shadow-soft); }
+  50%{ box-shadow: 0 18px 70px rgba(0,0,0,.62), 0 0 26px rgba(100,255,218,.14); }
+}
+
+/* Apply floating to hero image for instant “wow” */
+.heroImage{
+  animation: floatSoft 4.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Center every main box + add animated border */
+.aboutContainer,
+.educationCard,
+.internshipCard,
+.contactContainer,
+.skillsOuterBox,
+.projectCard{
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 980px;
+
+  position: relative;
+  isolation: isolate; /* keeps glow behind content */
+  overflow: hidden;
+
+  /* stronger glass feel */
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.14),
+    rgba(255,255,255,0.07)
+  );
+  backdrop-filter: blur(14px) saturate(145%);
+  -webkit-backdrop-filter: blur(14px) saturate(145%);
+
+  /* animated depth */
+  animation: glowPulse 5.5s ease-in-out infinite;
+}
+
+/* Neon animated border ring */
+.aboutContainer::before,
+.educationCard::before,
+.internshipCard::before,
+.contactContainer::before,
+.skillsOuterBox::before,
+.projectCard::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: calc(var(--radius) + 2px);
+  background: conic-gradient(
+    from 0deg,
+    rgba(100,255,218,0.00),
+    rgba(100,255,218,0.55),
+    rgba(77,208,225,0.55),
+    rgba(255,255,255,0.12),
+    rgba(100,255,218,0.00)
+  );
+  z-index:-2;
+  animation: auroraBorderSpin 10s linear infinite;
+  opacity: 0.75;
+
+  /* Show only the border area */
+  padding: 2px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+}
+
+/* Soft glow behind the card */
+.aboutContainer::after,
+.educationCard::after,
+.internshipCard::after,
+.contactContainer::after,
+.skillsOuterBox::after,
+.projectCard::after{
+  content:"";
+  position:absolute;
+  inset:-40px;
+  background:
+    radial-gradient(700px 260px at 20% 20%, rgba(100,255,218,0.14), transparent 60%),
+    radial-gradient(520px 220px at 80% 10%, rgba(77,208,225,0.12), transparent 60%);
+  z-index:-3;
+  filter: blur(18px);
+  opacity: 0.9;
+}
+
+/* Hover “lift” feels premium */
+.aboutContainer:hover,
+.educationCard:hover,
+.internshipCard:hover,
+.contactContainer:hover,
+.skillsOuterBox:hover,
+.projectCard:hover{
+  transform: translateY(-4px);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  box-shadow: 0 28px 90px rgba(0,0,0,0.66);
+}
+
+/* Make box content more “middle” aligned (without breaking layout) */
+.educationCard,
+.internshipCard,
+.contactContainer,
+.skillsOuterBox{
+  text-align: center;
+}
+
+/* Buttons get a glow sweep */
+.heroButtons,
+.gitHubButton,
+.demoButton,
+.certificateBtn,
+.socialLinks a{
+  position: relative;
+  overflow: hidden;
+}
+.heroButtons::after,
+.gitHubButton::after,
+.demoButton::after,
+.certificateBtn::after,
+.socialLinks a::after{
+  content:"";
+  position:absolute;
+  top:-40%;
+  left:-60%;
+  width: 55%;
+  height: 180%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+}
+.heroButtons:hover::after,
+.gitHubButton:hover::after,
+.demoButton:hover::after,
+.certificateBtn:hover::after,
+.socialLinks a:hover::after{
+  opacity: 1;
+  left: 120%;
+  transition: left 650ms ease, opacity 180ms ease;
+}
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .heroImage,
+  .aboutContainer,
+  .educationCard,
+  .internshipCard,
+  .contactContainer,
+  .skillsOuterBox,
+  .projectCard{
+    animation: none !important;
+    transition: none !important;
+  }
+  .aboutContainer::before,
+  .educationCard::before,
+  .internshipCard::before,
+  .contactContainer::before,
+  .skillsOuterBox::before,
+  .projectCard::before{
+    animation: none !important;
+  }
+  .heroButtons::after,
+  .gitHubButton::after,
+  .demoButton::after,
+  .certificateBtn::after,
+  .socialLinks a::after{
+    display:none !important;
+  }
+}
+
+/* ===============================
+   RESPONSIVE
+=============================== */
+@media (max-width: 900px) {
+  .aboutContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 28px;
+  }
+}
+
 @media (max-width: 768px) {
-  .skillsOuterBox {
-    padding: 25px;
-    border-radius: 22px;
-  }
-
-  .skillsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .skillCard {
-    justify-content: center;
+  .projectCard {
+    flex-direction: column;
     text-align: center;
   }
 
@@ -329,604 +820,231 @@ box-shadow:
     grid-column: span 1;
   }
 }
+
+/* ===== Floating SVG icons (force visible) ===== */
+
+/* Ensure scanline overlay doesn't cover icons */
+body::before{
+  z-index: -1 !important;
+}
+
+/* ===============================
+   FLOATING ICONS (fix transform animation conflict)
+   - vertical uses `translate`
+   - horizontal uses `transform`
+=============================== */
+
+.float-icon{
+  position: absolute;
+  display: grid;
+  place-items: center;
+
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+
+  box-shadow:
+    0 18px 55px rgba(0,0,0,0.35),
+    0 0 18px rgba(100,255,218,0.08);
+
+  opacity: 0.9;
+
+  /* baseline values so both animations can compose */
+  translate: 0 22px;
+  transform: translate3d(0, 0, 0);
+
+  animation:
+    floatUp var(--dur, 14s) linear infinite,
+    floatSway var(--sway, 4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes floatUp{
+  0%   { translate: 0 22px; opacity: 0; }
+  12%  { opacity: 0.9; }
+  88%  { opacity: 0.9; }
+  100% { translate: 0 -140px; opacity: 0; }
+}
+@keyframes floatSway{
+  0%,100% { transform: translate3d(0, 0, 0); }
+  50%     { transform: translate3d(22px, 0, 0); }
+}
+
+/* ===============================
+   RESPONSIVE (remove cursor override that can break desktop)
+=============================== */
+
 @media (max-width: 768px) {
-  .skillCard {
-    border-radius: 14px;
-  }
+  /* REMOVE this old rule if present elsewhere:
+     * { cursor: auto !important; }
+     It's redundant with the (hover/pointer) media queries and can break desktop in narrow windows.
+  */
 }
 
+/* ===============================
+   HERO GLASS (Glassmorphism)
+   - Works best if your hero has a wrapper like .hero-content / .hero-container / .hero-card
+=============================== */
 
-/* =====================================================
-   PROJECTS
-===================================================== */
-#projectSection {
-  width: 85%;
-  margin: 120px auto;
-  gap: 40px;
-  max-width: 900px;
-}
-#projectSection .heading {
-  margin-bottom: 40px;   /* ✅ ADDS GAP */
-}
-
-.projectCard {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-
-  background: var(--card-dark);
-  padding: 30px;
-  border-radius: 20px;
-  margin-bottom: 40px;
-
+/* Utility (use this class anywhere if you want) */
+.glass-panel{
+  background: linear-gradient(
+      135deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.04)
+  );
+  border: 1px solid rgba(255,255,255,0.12);
   box-shadow:
-    0 0 8px rgba(127, 183, 194, 0.5),
-    0 0 18px rgba(127, 183, 194, 0.6);
+    0 18px 60px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-radius: 18px;
 }
 
-.projectImage {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  flex-shrink: 0;
-
-  background :rgba(0, 0, 0, 0.6);
-  padding: 8px;
-  border-radius: 10px;
-}
-@media (max-width: 768px) {
-  .projectCard {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-.buttons {
-  margin-top: 15px;
-  display: flex;
-  gap: 15px;
-}
-
-.gitHubButton {
-  background: black;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-}
-
-.demoButton {
-  background: #F8F5E9;
-  color: black;
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-}
-
-/* Internships */
-#internshipSection {
-  padding: 60px 20px;
-}
-
-.internshipContainer {
-  max-width: 900px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.internshipCard {
-  background: #F8F5E9;
-  border-radius: 20px;
-  padding: 25px 30px;
+/* Auto-apply to common hero structures (no HTML change needed if you already use these) */
+#hero .hero-content,
+#hero .hero-container,
+#hero .hero-card,
+.hero .hero-content,
+.hero .hero-container,
+.hero .hero-card,
+section.hero .hero-content,
+section.hero .hero-container,
+section.hero .hero-card{
+  background: linear-gradient(
+      135deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.04)
+  );
+  border: 1px solid rgba(255,255,255,0.12);
   box-shadow:
-    0 0 8px rgba(127, 183, 194, 0.5),
-    0 0 18px rgba(127, 183, 194, 0.6);
+    0 18px 60px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-radius: 18px;
 
-  transition: box-shadow 0.4s ease;
-  margin-top: 30px;
+  padding: clamp(18px, 3vw, 34px);
 }
 
-.internHeader {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+/* Optional: give the hero a soft glass “edge glow” */
+#hero,
+.hero,
+section.hero{
+  position: relative;
 }
 
-.internLogo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: 50px;
-}
-
-.internOrg {
-  font-weight: 600;
-  color: #333;
-}
-
-.internDuration {
-  font-size: 14px;
-  color: #666;
-}
-
-.internDesc {
-  margin-top: 12px;
-  font-size: 15px;
-  color: #444;
-  line-height: 1.6;
-}
-
-.certificateBtn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 8px 16px;
-  background: black;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .internHeader {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-/* Contact Section */
-#contactSection {
-  margin-top: 80px;
-  padding: 60px 20px;
-}
-
-.contactContainer {
-  max-width: 900px;
-  margin: auto;
-  background: #F8F5E9;
-  border-radius: 25px;
-  padding: 40px;
-  box-shadow:
-    0 0 8px rgba(127, 183, 194, 0.5),
-    0 0 18px rgba(127, 183, 194, 0.6);
-
-  transition: box-shadow 0.4s ease;
-  margin-top:30px;
-}
-
-.contactInfo {
-  text-align: center;
-}
-
-.contactInfo h3 {
-  font-size: 28px;
-  margin-bottom: 15px;
-}
-
-.contactInfo p {
-  color: #555;
-  font-size: 16px;
-  margin-bottom: 25px;
-}
-
-.contactItem {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.contactItem a {
-  text-decoration: none;
-  color: #000;
-}
-
-.socialLinks {
-  margin-top: 25px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.socialLinks a {
-  text-decoration: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-  background: #000;
-  color: #fff;
-  font-weight: 500;
-  transition: transform 0.2s ease;
-}
-
-.socialLinks a:hover {
-  transform: translateY(-2px);
-}
-
-/* Footer */
-footer {
-  background-color: black;
-  padding: 25px;
-  color: white;
-  text-align: center;
-  margin-top: 75px;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  #aboutMeSection {
-    flex-direction: column;
-  }
-
-  .aboutP1,
-  .aboutP2 {
-    width: 100%;
-  }
-
-  .skillsDiv {
-    flex-direction: row;
-  }
-
-  .skillsDiv .p1,
-  .skillsDiv .p2 {
-    width: 100%;
-    align-items: center;
-  }
-
-  .projectCard {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-/* ===========================
-   DARK MODE STYLES
-=========================== */
-
-body.dark-mode {
-  background: #121212;
-  color: #eaeaea;
-}
-
-/* Sections */
-body.dark-mode .navbar,
-body.dark-mode .educationCard,
-body.dark-mode .skillsDiv,
-body.dark-mode .projectCard,
-body.dark-mode .internshipCard,
-body.dark-mode .contactContainer {
-  background: #1e1e1e;
-  color: #eaeaea;
-}
-/* Explicit transparent hero */
-body.dark-mode #HeroSection {
-  background: transparent !important;
-  padding-top: 200px;
-}
-
-/* Headings */
-body.dark-mode h1,
-body.dark-mode h3 {
-  color: #ffffff;
-}
-
-/* Paragraph text */
-body.dark-mode p {
-  color: #cccccc;
-}
-
-/* Buttons */
-body.dark-mode .heroButtons,
-body.dark-mode .gitHubButton,
-body.dark-mode .certificateBtn {
-  background: #ffffff;
-  color: #000000;
-}
-
-body.dark-mode .demoButton {
-  background: #2a2a2a;
-  color: #ffffff;
-}
-
-/* Links */
-body.dark-mode a {
-  color: #4da3ff;
-}
-
-/* Footer */
-body.dark-mode footer {
-  background: #000000;
-  color: #ffffff;
-}
-
-body.dark-mode button,
-body.dark-mode .btn,
-body.dark-mode a.btn,
-body.dark-mode .gitHubButton,
-body.dark-mode .demoButton,
-body.dark-mode .certificateBtn,
-body.dark-mode .heroButtons,
-body.dark-mode .socialLinks a {
-  background: #111;
-  color: #4dd0e1;
-  border: 1px solid rgba(77, 208, 225, 0.4);
-  box-shadow:
-    0 0 4px rgba(77, 208, 225, 0.35),
-  0 0 10px rgba(77, 208, 225, 0.2);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-body.dark-mode .skillsDiv .p1 {
-  background: var(--soft-dark);
-  color: var(--accent);
-}
-
-body.dark-mode .skillsDiv .p2 {
-  color: var(--text-dark);
-}
-
-body.dark-mode .gitHubButton,
-body.dark-mode .certificateBtn {
-  background: var(--accent);
-  color: #000;
-}
-
-body.dark-mode .demoButton {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-}
-body.dark-mode .navbar {
-  background: #0f0f0f;
-}
-
-body.dark-mode .navbar a {
-  color: var(--text-dark);
-}
-#bg-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
+#hero::before,
+.hero::before,
+section.hero::before{
+  content: "";
+  position: absolute;
+  inset: 0;
   pointer-events: none;
+  background: radial-gradient(900px 420px at 30% 20%, rgba(100,255,218,0.10), rgba(0,0,0,0) 60%),
+              radial-gradient(900px 420px at 70% 35%, rgba(160,120,255,0.08), rgba(0,0,0,0) 62%);
+  opacity: 0.9;
 }
+
+/* Fallback if backdrop-filter isn’t supported */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  #hero .hero-content,
+  #hero .hero-container,
+  #hero .hero-card,
+  .hero .hero-content,
+  .hero .hero-container,
+  .hero .hero-card,
+  section.hero .hero-content,
+  section.hero .hero-container,
+  section.hero .hero-card,
+  .glass-panel{
+    background: rgba(20, 24, 38, 0.78);
+  }
+}
+
 /* ===============================
-   DARK MODE – CONTACT SECTION FIX
-================================ */
-
-body.dark-mode #contactSection {
-  color: #ffffff;
-}
-
-body.dark-mode .contactContainer {
-  background: rgba(20, 20, 20, 0.88);
-  color: #ffffff;
-}
-
-body.dark-mode .contactInfo h3 {
-  color: #ffffff;
-}
-
-body.dark-mode .contactInfo p {
-  color: #d1d1d1;
-}
-
-body.dark-mode .contactItem a {
-  color: #ffffff;
-}
-
-body.dark-mode .socialLinks a {
-  background: #111;
-  color: #4dd0e1; /* accent cyan */
-  box-shadow: 0 0 12px rgba(77, 208, 225, 0.35);
-}
-
-body.dark-mode button:hover,
-body.dark-mode .btn:hover,
-body.dark-mode a.btn:hover,
-body.dark-mode .gitHubButton:hover,
-body.dark-mode .demoButton:hover,
-body.dark-mode .certificateBtn:hover,
-body.dark-mode .heroButtons:hover,
-body.dark-mode .socialLinks a:hover {
-  background: #4dd0e1;
-  color: #000;
-  box-shadow:
-  0 0 6px rgba(77, 208, 225, 0.55),
-  0 0 16px rgba(77, 208, 225, 0.35);
-
-  transform: translateY(-2px) scale(1.03);
-}
-/* ===============================
-   MOBILE-FIRST SAFE CSS
+   HERO: DEPTH BLUR PARALLAX (Apple-like)
+   - Back layer: strong blur, slow parallax
+   - Mid layer: medium blur
+   - Front: your existing hero content stays sharp (glass)
 =============================== */
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: "Modern Antiqua", serif;
-  background: #F8F5E9;
-  color: #1E1E1E;
-  overflow-x: hidden;
-}
-
-/* ===============================
-   HERO SECTION – MOBILE SAFE
-=============================== */
-
-#HeroSection {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 16px;
-}
-
-.heroSectionContent {
-  width: 100%;
-  max-width: 420px;     /* 🔒 LOCKED WIDTH */
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Text lines */
-.heroSectionContent p {
-  margin: 6px 0;
-  font-size: 18px;
-  line-height: 1.4;
-}
-
-/* Name & role */
-.focus-text {
-  display: block;       /* 🔥 prevents side shift */
-  width: 100%;
-  text-align: center;
-  font-size: 32px;
-  font-weight: 800;
-}
-
-/* Resume button */
-.heroButtons {
-  margin-top: 14px;
-  padding: 10px 20px;
-  background: black;
-  color: white;
-  border-radius: 8px;
-  border: none;
-}
-
-/* ===============================
-   SECTIONS WRAPPER
-=============================== */
-
-#aboutMeSection,
-#educationSection,
-#skillsSection,
-#projectSection,
-#internshipSection,
-#contactSection {
-  width: 92%;
-  margin: 0 auto;
-}
-
-/* ===============================
-   SKILLS – MOBILE FIX (NO CUTTING)
-=============================== */
-
-.skillsDiv {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
+#HeroSection{
+  position: relative;
   overflow: hidden;
-
-  /* ❌ REMOVE FLEX */
-  display: block;
+  isolation: isolate; /* keeps layers contained */
+  /* JS updates these */
+  --mx: 0;   /* -1..1 */
+  --my: 0;   /* -1..1 */
+  --sy: 0;   /* scrollY px */
 }
 
-.skillsDiv .p1 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.skillsDiv .p2 {
-  width: 100%;
-}
-
-/* Skills list */
-.skillsList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.skillsList li {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 16px;
-}
-
-/* ===============================
-   PROJECT CARDS – MOBILE
-=============================== */
-
-.projectCard {
-  display: block;
-  padding: 16px;
-  margin-bottom: 24px;
-}
-
-.projectImage {
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 12px;
-}
-
-/* ===============================
-   INTERNSHIPS – MOBILE
-=============================== */
-
-.internshipCard {
-  padding: 16px;
-  margin-bottom: 20px;
-}
-
-/* ===============================
-   CONTACT
-=============================== */
-
-.contactContainer {
-  padding: 20px;
-  border-radius: 16px;
-}
-
-/* ===============================
-   FOOTER
-=============================== */
-
-footer {
-  text-align: center;
-  padding: 20px;
-  background: black;
-  color: white;
-}
-.triangle-cursor {
-  position: fixed;
-  width: 0;
-  height: 0;
-
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 14px solid #ffffff;
-
+/* BACK (furthest, most blurred) */
+#HeroSection::before{
+  content:"";
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
   pointer-events: none;
-  z-index: 999999;
 
-  transform: translate(-50%, -50%) rotate(-45deg);
-  filter: drop-shadow(0 0 6px rgba(127, 183, 194, 0.8));
+  background:
+    radial-gradient(900px 520px at 20% 25%, rgba(100,255,218,0.18), transparent 60%),
+    radial-gradient(820px 480px at 80% 20%, rgba(160,120,255,0.14), transparent 62%),
+    radial-gradient(900px 560px at 60% 85%, rgba(77,208,225,0.12), transparent 60%);
+
+  filter: blur(52px) saturate(150%);
+  opacity: 0.85;
+
+  transform: translate3d(
+      calc(var(--mx) * 14px),
+      calc(var(--my) * 10px + var(--sy) * 0.02px),
+      0
+    )
+    scale(1.06);
 }
 
-@media (max-width: 768px) {
-  * {
-    cursor: auto !important;
-  }
-  .triangle-cursor {
-    display: none;
-  }
+/* MID (closer, less blur, moves a bit faster) */
+#HeroSection::after{
+  content:"";
+  position: absolute;
+  inset: -12%;
+  z-index: 1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(520px 300px at 35% 45%, rgba(255,255,255,0.06), transparent 65%),
+    radial-gradient(640px 360px at 70% 55%, rgba(100,255,218,0.07), transparent 70%);
+
+  filter: blur(26px) saturate(140%);
+  opacity: 0.75;
+
+  transform: translate3d(
+      calc(var(--mx) * 22px),
+      calc(var(--my) * 16px + var(--sy) * 0.035px),
+      0
+    )
+    scale(1.02);
 }
-#typingText {
-  display: inline-block;
-  min-height: 32px;
-  white-space: nowrap;
+
+/* FRONT (your content stays above layers and sharp) */
+.heroSectionContent{
+  position: relative;
+  z-index: 2;
+
+  /* stronger “glass card” feel for hero */
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius);
+  padding: clamp(18px, 3vw, 34px);
+  backdrop-filter: blur(14px) saturate(145%);
+  -webkit-backdrop-filter: blur(14px) saturate(145%);
+  box-shadow: var(--shadow);
 }
+
+/* (cleanup) removed pasted demo HTML and conflicting overrides */
