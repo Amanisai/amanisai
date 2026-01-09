@@ -23,6 +23,7 @@
 			h: 0,
 			last: 0,
 			sprites: null,
+			scrollingUntil: 0,
 		};
 
 		const particleCountFor = (w, h) => {
@@ -110,7 +111,7 @@
 			);
 		};
 
-		const drawParticle = (pt) => {
+		const drawParticle = (pt, lite) => {
 			const x = pt.x;
 			const y = pt.y;
 			const r = pt.r;
@@ -122,6 +123,8 @@
 			ctx.globalCompositeOperation = "source-over";
 			ctx.globalAlpha = pt.a;
 			ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
+
+			if (lite) return;
 
 			// Core glow pass (additive)
 			ctx.globalCompositeOperation = "lighter";
@@ -146,7 +149,8 @@
 			// Ensure canvas does not block interaction.
 			c.elt.style.pointerEvents = "none";
 
-			p.frameRate(60);
+			// Slightly lower FPS helps keep scrolling smooth on mid-range devices.
+			p.frameRate(40);
 			p.noStroke();
 
 			state.last = p.millis();
@@ -160,6 +164,26 @@
 				};
 			}
 			window.addEventListener("resize", rebuild, { passive: true });
+			// Freeze the background while scrolling to keep scrolling buttery-smooth.
+			let resumeTimer = 0;
+			window.addEventListener(
+				"scroll",
+				() => {
+					if (reduceMotion) return;
+					state.scrollingUntil = performance.now() + 220;
+					p.noLoop();
+					if (resumeTimer) window.clearTimeout(resumeTimer);
+					resumeTimer = window.setTimeout(() => {
+						if (!document.hidden) p.loop();
+					}, 200);
+				},
+				{ passive: true }
+			);
+			document.addEventListener("visibilitychange", () => {
+				if (reduceMotion) return;
+				if (document.hidden) p.noLoop();
+				else p.loop();
+			});
 
 			rebuild();
 
@@ -178,8 +202,11 @@
 			// Transparent canvas; body handles base background.
 			p.clear();
 
+			const isScrolling = performance.now() < state.scrollingUntil;
 			const margin = 260;
-			for (const pt of state.particles) {
+			for (let i = 0; i < state.particles.length; i++) {
+				if (isScrolling && (i % 2 === 1)) continue;
+				const pt = state.particles[i];
 				pt.x += pt.vx * dt * (0.25 + 0.55 * (1 - pt.z));
 				pt.y += pt.vy * dt * (0.25 + 0.55 * (1 - pt.z));
 
@@ -189,7 +216,7 @@
 				if (pt.y < -margin) pt.y = state.h + margin;
 				if (pt.y > state.h + margin) pt.y = -margin;
 
-				drawParticle(pt);
+				drawParticle(pt, isScrolling);
 			}
 
 			p.drawingContext.globalAlpha = 1;

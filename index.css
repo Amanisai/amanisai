@@ -40,6 +40,31 @@ body {
   color: var(--text);
 }
 
+/* While the user is actively scrolling, temporarily pause/disable the heaviest visual effects.
+   This reduces repaints/compositing work and makes scrolling feel much smoother. */
+body.is-scrolling::after{
+  animation-play-state: paused;
+}
+
+body.is-scrolling .navbar{
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.is-scrolling .heroSectionContent{
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.is-scrolling #HeroSection::before,
+body.is-scrolling #HeroSection::after{
+  filter: none;
+}
+
+body.is-scrolling #cursor-canvas{
+  opacity: 0;
+}
+
 /* Your JS forces this class; make it consistent */
 body.dark-mode {
   background: var(--bg);

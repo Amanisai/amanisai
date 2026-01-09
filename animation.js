@@ -103,6 +103,28 @@
           { passive: true }
         );
       }
+
+      /* ===============================
+         SCROLL PERFORMANCE MODE
+         Temporarily disables expensive visual effects while actively scrolling.
+      =============================== */
+      if (!document.body.dataset.scrollPerfHooked) {
+        document.body.dataset.scrollPerfHooked = "1";
+        let scrollPerfTimer = 0;
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!document.body.classList.contains("is-scrolling")) {
+              document.body.classList.add("is-scrolling");
+            }
+            if (scrollPerfTimer) window.clearTimeout(scrollPerfTimer);
+            scrollPerfTimer = window.setTimeout(() => {
+              document.body.classList.remove("is-scrolling");
+            }, 160);
+          },
+          { passive: true }
+        );
+      }
     };
 
     initApp();

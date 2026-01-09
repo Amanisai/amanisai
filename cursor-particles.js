@@ -65,7 +65,7 @@
   }
 
   // --- Particle pool (fast, GC-friendly) ---
-  const MAX = 650;
+  const MAX = 420;
   const particles = new Array(MAX);
   let alive = 0;
 
@@ -189,6 +189,8 @@
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       mouse.inside = true;
+      lastMove = performance.now();
+      startLoop();
     },
     { passive: true }
   );
@@ -203,6 +205,34 @@
 
   // --- Animation loop ---
   let emitCarry = 0;
+  let scrollingUntil = 0;
+  let lastMove = performance.now();
+  let rafId = 0;
+  let running = false;
+  let lastFrame = 0;
+
+  function startLoop() {
+    if (running) return;
+    running = true;
+    mouse.lastT = performance.now();
+    rafId = requestAnimationFrame(step);
+  }
+
+  function stopLoop() {
+    running = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  // While scrolling, reduce per-frame work (helps prevent scroll jank).
+  window.addEventListener(
+    "scroll",
+    () => {
+      scrollingUntil = performance.now() + 140;
+      if (alive > 0) startLoop();
+    },
+    { passive: true }
+  );
 
   function updateMouse(now) {
     const dt = Math.min(0.05, (now - mouse.lastT) / 1000);
@@ -236,10 +266,19 @@
   function step(now) {
     const dt = updateMouse(now);
 
+    const isScrolling = now < scrollingUntil;
+
+    // While scrolling, cap canvas work to ~30fps.
+    if (isScrolling && (now - lastFrame) < 32) {
+      rafId = requestAnimationFrame(step);
+      return;
+    }
+    lastFrame = now;
+
     // Fade the canvas by subtracting alpha (trail without dark overlay).
     ctx.globalCompositeOperation = "destination-out";
     // Slightly stronger fade reduces overdraw (still leaves smooth trails)
-    ctx.fillStyle = "rgba(0,0,0,0.16)";
+    ctx.fillStyle = isScrolling ? "rgba(0,0,0,0.28)" : "rgba(0,0,0,0.16)";
     ctx.fillRect(0, 0, w, h);
 
     // Draw particles additively for a premium glow.
@@ -248,14 +287,15 @@
     const hoveringNav = document.body.classList.contains("nav-hover");
 
     // Emission: scales with speed; subtle when slow.
-    if (mouse.inside && !hoveringNav) {
+    // During scrolling we don't emit new particles (keeps scrolling smooth).
+    if (!isScrolling && mouse.inside && !hoveringNav) {
       const intensity = clamp(mouse.speed / 1600, 0, 1);
 
       // Rate: always a little smoke, more when faster.
-      const targetRate = lerp(10, 85, intensity); // particles/sec (combined)
+      const targetRate = lerp(8, 60, intensity); // particles/sec (combined)
       emitCarry += targetRate * dt;
 
-      const emitCount = Math.min(18, emitCarry | 0);
+      const emitCount = Math.min(10, emitCarry | 0);
       if (emitCount > 0) emitCarry -= emitCount;
 
       for (let i = 0; i < emitCount; i++) {
@@ -281,15 +321,22 @@
       const t = p.age / p.life;
       const inv = 1 - t;
 
-      // Flow field acceleration
-      const flow = turbulence(p.x, p.y, now, p.seed);
-      const turb = p.type === 0 ? 26 : 55;
+      if (!isScrolling) {
+        // Flow field acceleration
+        const flow = turbulence(p.x, p.y, now, p.seed);
+        const turb = p.type === 0 ? 26 : 55;
 
-      p.ax = flow.fx * turb;
-      p.ay = flow.fy * turb;
+        p.ax = flow.fx * turb;
+        p.ay = flow.fy * turb;
+      } else {
+        p.ax = 0;
+        p.ay = 0;
+      }
 
       // Drag: sparks keep more energy, smoke slows faster
-      const drag = p.type === 0 ? 0.86 : 0.90;
+      const drag = isScrolling
+        ? (p.type === 0 ? 0.82 : 0.86)
+        : (p.type === 0 ? 0.86 : 0.90);
 
       p.vx = (p.vx + p.ax * dt) * drag;
       p.vy = (p.vy + p.ay * dt) * drag;
@@ -326,8 +373,18 @@
     }
 
     ctx.globalAlpha = 1;
-    requestAnimationFrame(step);
+
+    // Stop the loop when idle to reduce CPU/GPU usage.
+    // Restart happens on mousemove/scroll.
+    const idleLongEnough = now - lastMove > 220;
+    if (alive === 0 && idleLongEnough) {
+      stopLoop();
+      return;
+    }
+
+    rafId = requestAnimationFrame(step);
   }
 
-  requestAnimationFrame(step);
+  // Start immediately, but it will auto-stop when idle.
+  startLoop();
 })();
