@@ -40,6 +40,22 @@ body {
   color: var(--text);
 }
 
+/* Keep the default system cursor (triangle) everywhere */
+html,
+body{
+  cursor: default;
+}
+
+a,
+button,
+[role="button"],
+input,
+textarea,
+select,
+label{
+  cursor: default;
+}
+
 /* While the user is actively scrolling, temporarily pause/disable the heaviest visual effects.
    This reduces repaints/compositing work and makes scrolling feel much smoother. */
 body.is-scrolling::after{
@@ -59,10 +75,6 @@ body.is-scrolling .heroSectionContent{
 body.is-scrolling #HeroSection::before,
 body.is-scrolling #HeroSection::after{
   filter: none;
-}
-
-body.is-scrolling #cursor-canvas{
-  opacity: 0;
 }
 
 /* Your JS forces this class; make it consistent */
@@ -176,44 +188,6 @@ body::after{
 }
 
 /* ===============================
-   CINEMATIC PARTICLE CURSOR (canvas overlay)
-=============================== */
-#cursor-canvas{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 2147483646;
-  pointer-events: none;
-}
-
-/* On coarse pointers (mobile/tablet), keep it off */
-@media (hover: none), (pointer: coarse) {
-  #cursor-canvas{ display: none; }
-}
-
-/* Hide the default cursor only on desktop/fine pointers */
-@media (hover: hover) and (pointer: fine) {
-  html,
-  body,
-  * {
-    cursor: none !important;
-  }
-}
-
-/* When hovering the navbar, restore the normal cursor */
-body.nav-hover,
-body.nav-hover *{
-  cursor: auto !important;
-}
-
-body.nav-hover a,
-body.nav-hover button,
-body.nav-hover [role="button"]{
-  cursor: pointer !important;
-}
-
-/* ===============================
    GLOBAL HELPERS
 =============================== */
 p {
@@ -276,11 +250,6 @@ p {
 .navbar,
 .navbar * {
   cursor: auto;
-}
-
-.navbar a,
-.navbar button {
-  cursor: pointer;
 }
 
 
